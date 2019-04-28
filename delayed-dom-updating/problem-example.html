@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="render-functions.js"></script>
+  <script>
+
+    function updateCanvasSize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      renderData();
+    }
+
+    window.onresize = function () {
+      updateCanvasSize();
+    }
+
+  </script>
+</head>
+
+<body>
+  <canvas></canvas>
+</body>
+
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="render-functions.js"></script>
+    <script>
+      function updateCanvasSize(){
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+          isTimeoutSet = false
+          renderData();
+      }
+
+      let isTimeoutSet = false;
+
+      window.onresize = function(){
+          if(isTimeoutSet) return;
+          isTimeoutSet = true
+          setTimeout(updateCanvasSize, 250)
+      }
+    </script>
+  </head>
+  <body>
+    <canvas></canvas>
+  </body>
+</html>
