@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
+    <title>Points</title>
+</head>
+
+<body>
+    <script>
+        let bg;
+        let points = 0
+        let spawnPoints = []
+
+        class Point {
+            constructor(x, y) {
+                this.startingPosition = createVector(x, y)
+                this.position = createVector(x, y)
+                this.velocity = createVector(0, -1)
+            }
+            draw() {
+                textAlign(LEFT);
+                this.position.add(this.velocity)
+                text("10", this.position.x, this.position.y);
+            }
+        }
+
+        function drawPointsLabel() {
+            textAlign(RIGHT);
+            text("Points", window.innerWidth / 2 - 10, 30);
+        }
+
+        function drawPoints() {
+            textAlign(LEFT);
+            text(points, window.innerWidth / 2 + 10, 30);
+        }
+
+        function preload() {
+            bg = loadImage("bg.png")
+        }
+
+        function setup() {
+            createCanvas(window.innerWidth, window.innerHeight);
+            fill("white")
+            textSize(32)
+        }
+
+
+        function draw() {
+            background(bg)
+            drawPointsLabel();
+            drawPoints()
+            for(let i = spawnPoints.length-1;i>=0;i--){
+                const p =  spawnPoints[i]
+                if(p.position.y < 30){
+                    points += 10;
+                    spawnPoints.splice(i,1)
+                } else {
+                    p.draw()
+                    p.velocity.y -= 10 / frameRate();
+                }
+            }
+            spawnPoints.forEach((p) => {
+                
+            })
+
+        }
+
+        function mousePressed() {
+            spawnPoints.push(new Point(mouseX, mouseY));
+        }
+
+
+    </script>
+</body>
+
+</html>

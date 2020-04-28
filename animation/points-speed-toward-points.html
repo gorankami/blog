@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
+    <title>Points</title>
+</head>
+
+<body>
+    <script>
+        let bg;
+        let points = 0
+        let spawnPoints = []
+
+        function easeInQuad(currentTime, duration) {
+            return (currentTime /= duration) * currentTime * currentTime;
+        }
+
+        function easeOutCubic(currentTime, duration) {
+            return (currentTime = currentTime / duration - 1) * currentTime * currentTime + 1;
+        }
+
+        function easeOutBack(currentTime, duration, s) {
+            if (s == undefined) s = 1.70158;
+            return (currentTime = currentTime / duration - 1) * currentTime * ((s + 1) * currentTime + s) + 1;
+        }
+
+        class Point {
+            constructor(x, y) {
+                this.startingPosition = createVector(x, y)
+                this.endingPostionPosition = createVector(window.innerWidth / 2, 10)
+                this.position = createVector(x, y)
+                this.lerpFactor = 0;
+                this.startingTime = (new Date()).getTime();
+            }
+            draw() {
+                textAlign(CENTER, CENTER);
+                this.lerpFactor = easeOutCubic((new Date()).getTime() - this.startingTime, 500)
+
+                this.position = p5.Vector.lerp(this.startingPosition, this.endingPostionPosition, this.lerpFactor)
+                text("10", this.position.x, this.position.y);
+            }
+        }
+
+        function drawPointsLabel() {
+            textAlign(RIGHT, CENTER);
+            text("Points", window.innerWidth / 2 - 40, 30);
+        }
+
+        let scoreSize;
+        const scoreSizeMin = 35
+        let startTime = (new Date()).getTime();
+
+        function drawPoints() {
+            push()
+            let currentTime = (new Date()).getTime()-startTime;
+            if(currentTime < 100){
+                scoreSize = easeOutBack(currentTime,100, 5) * 10 + scoreSizeMin
+            } else {
+                scoreSize = scoreSizeMin;
+            }
+            textSize(scoreSize)
+            textAlign(CENTER, CENTER);
+            text(points, window.innerWidth / 2, 30);
+            pop();
+        }
+
+        function preload() {
+            bg = loadImage("bg.png")
+        }
+
+        function setup() {
+            createCanvas(window.innerWidth, window.innerHeight);
+            fill("white")
+            textSize(32)
+        }
+
+
+        function draw() {
+            background(bg)
+            drawPointsLabel();
+            drawPoints()
+            for (let i = spawnPoints.length - 1; i >= 0; i--) {
+                const p = spawnPoints[i]
+                if (p.position.y < 30) {
+                    points += 10;
+                    spawnPoints.splice(i, 1)
+                    startTime = (new Date()).getTime()
+                } else {
+                    p.draw()
+                }
+            }
+
+        }
+
+        function mousePressed() {
+            spawnPoints.push(new Point(mouseX, mouseY));
+        }
+    </script>
+</body>
+
+</html>
